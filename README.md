@@ -1,13 +1,39 @@
-# Sample Hardhat Project
+# Dapp Punks
+This project demonstrates a basic generative NFT contract. The development lifecycle is as follows:
+1. Generate Images
+2. Generate Metadata
+3. Upload to IPFS
+4. Create NFT Smart Contract
+5. Link Smart Contract to IPFS Metadata
+6. Users Mint NFTs
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+## Stack
+Technologies Used:
+* JavaScript
+* React
+* Solidity
+* Bootstrap
 
-Try running some of the following tasks:
+Libraries Used:
+* [React-Bootstrap](https://react-bootstrap.github.io/)
 
+Testing Libraries:
+* [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+* [Jest](https://jestjs.io/)
+* [Chai](https://www.chaijs.com/)
+
+Dev Tools:
+* [Hardhat](https://hardhat.org/)
+* [dotenv](https://www.npmjs.com/package/dotenv)
+
+## Local Testing
+To test the Crowdsale locally, run the following:
 ```shell
-npx hardhat help
-npx hardhat test
-GAS_REPORT=true npx hardhat test
 npx hardhat node
-npx hardhat run scripts/deploy.js
+
+npx hardhat --network localhost scripts/1_deploy.js
+
+npx hardhat --network localhost scripts/2_seed.js
+
+npm run start
 ```
