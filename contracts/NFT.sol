@@ -7,11 +7,14 @@ import "./Ownable.sol";
 contract NFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
-    string public baseURI;
-    string public baseExtension = '.json';
     uint256 public cost;
     uint256 public maxSupply;
     uint256 public allowMintingOn;
+    uint256 public maxMintAmount;
+    string public baseURI;
+    string public baseExtension = '.json';
+
+    mapping(address => uint256) public addressMintedBalance;
 
     event Mint(uint256 amount, address minter);
     event Withdraw(uint256 amount, address owner);
@@ -22,17 +25,20 @@ contract NFT is ERC721Enumerable, Ownable {
         uint256 _cost,
         uint256 _maxSupply,
         uint256 _allowMintingOn,
+        uint256 _maxMintAmount,
         string memory _baseURI
     ) ERC721(_name, _symbol) {
         cost = _cost;
         maxSupply = _maxSupply;
         allowMintingOn = _allowMintingOn;
+        maxMintAmount = _maxMintAmount;
         baseURI = _baseURI;
     }
 
     function mint(uint256 _mintAmount) public payable {
         require(block.timestamp >= allowMintingOn, "Minting not allowed yet");
         require(_mintAmount > 0, "Must mint at least 1 token");
+        require(addressMintedBalance[msg.sender] + _mintAmount <= maxMintAmount, "Cannot mint more than maxMintAmount");
         require(msg.value >= cost * _mintAmount, "Not enough payment");
 
         uint256 supply = totalSupply();
@@ -41,6 +47,7 @@ contract NFT is ERC721Enumerable, Ownable {
         // Create tokens
         for(uint256 i = 1; i <= _mintAmount; i++) {
             _safeMint(msg.sender, supply + i);
+            addressMintedBalance[msg.sender] += 1;
         }
 
         // Emit event

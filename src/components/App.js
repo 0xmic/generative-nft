@@ -29,6 +29,7 @@ function App() {
   const [totalSupply, setTotalSupply] = useState(0)
   const [cost, setCost] = useState(0)
   const [balance, setBalance] = useState(0)
+  const [maxMintAmount, setMaxMintAmount] = useState(0)
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -55,6 +56,9 @@ function App() {
 
     // Fetch total supply
     setTotalSupply(await nft.totalSupply())
+
+    // Fetch max mint amount
+    setMaxMintAmount((await nft.maxMintAmount()).toNumber())
 
     // Fetch cost
     setCost(await nft.cost())
@@ -104,7 +108,13 @@ function App() {
                   <Countdown date={parseInt(revealTime)} className='h2' />
                 </div>
 
-                <Data maxSupply={maxSupply} totalSupply={totalSupply} cost={cost} balance={balance} />
+                <Data
+                  maxSupply={maxSupply}
+                  totalSupply={totalSupply}
+                  maxMintAmount={maxMintAmount}
+                  cost={cost}
+                  balance={balance}
+                />
 
                 <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
               </Col>
