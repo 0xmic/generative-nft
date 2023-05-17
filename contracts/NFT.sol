@@ -13,6 +13,7 @@ contract NFT is ERC721Enumerable, Ownable {
     uint256 public maxMintAmount;
     string public baseURI;
     string public baseExtension = '.json';
+    bool public paused = false;
 
     mapping(address => uint256) public addressMintedBalance;
 
@@ -40,6 +41,7 @@ contract NFT is ERC721Enumerable, Ownable {
         require(_mintAmount > 0, "Must mint at least 1 token");
         require(addressMintedBalance[msg.sender] + _mintAmount <= maxMintAmount, "Cannot mint more than maxMintAmount");
         require(msg.value >= cost * _mintAmount, "Not enough payment");
+        require(!paused, "Minting is paused");
 
         uint256 supply = totalSupply();
         require(supply + _mintAmount <= maxSupply, "Not enough tokens remaining");
@@ -90,5 +92,9 @@ contract NFT is ERC721Enumerable, Ownable {
 
     function setCost(uint256 _newCost) public onlyOwner {
         cost = _newCost;
+    }
+
+    function setPaused(bool _state) public onlyOwner {
+        paused = _state;
     }
 }

@@ -246,4 +246,41 @@ describe('NFT', () => {
       })
     })
   })
+
+  describe('Pausing Minting', () => {
+    let transaction, result
+
+    describe('Success', async () => {
+      const ALLOW_MINTING_ON = Date.now().toString().slice(0, 10) // Now
+
+      beforeEach(async () => {
+        const NFT = await ethers.getContractFactory('NFT')
+        nft = await NFT.deploy(NAME, SYMBOL, COST, MAX_SUPPLY, ALLOW_MINTING_ON, MAX_MINT_AMOUNT, BASE_URI)
+      })
+
+      it('pauses mint', async () => {
+        await nft.connect(deployer).setPaused(true)
+        expect(await nft.paused()).to.equal(true)
+      })
+
+      it('unpauses mint', async () => {
+        await nft.connect(deployer).setPaused(true)
+        expect(await nft.paused()).to.equal(true)
+
+        await nft.connect(deployer).setPaused(false)
+        expect(await nft.paused()).to.equal(false)
+      })
+    })
+
+    describe('Failure', async () => {
+      it('prevents minting while paused', async () => {
+        const ALLOW_MINTING_ON = Date.now().toString().slice(0, 10) // now
+        const NFT = await ethers.getContractFactory('NFT')
+        nft = await NFT.deploy(NAME, SYMBOL, COST, MAX_SUPPLY, ALLOW_MINTING_ON, MAX_MINT_AMOUNT, BASE_URI)
+
+        await nft.connect(deployer).setPaused(true)
+        await expect(nft.connect(minter).mint(1, { value: COST })).to.be.reverted
+      })
+    })
+  })
 })
