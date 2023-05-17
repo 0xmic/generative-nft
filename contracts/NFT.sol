@@ -15,6 +15,7 @@ contract NFT is ERC721Enumerable, Ownable {
     string public baseExtension = '.json';
     bool public paused = false;
 
+    mapping(address => bool) public whitelisted;
     mapping(address => uint256) public addressMintedBalance;
 
     event Mint(uint256 amount, address minter);
@@ -38,6 +39,7 @@ contract NFT is ERC721Enumerable, Ownable {
 
     function mint(uint256 _mintAmount) public payable {
         require(block.timestamp >= allowMintingOn, "Minting not allowed yet");
+        require(whitelisted[msg.sender], "Address not whitelisted");
         require(_mintAmount > 0, "Must mint at least 1 token");
         require(addressMintedBalance[msg.sender] + _mintAmount <= maxMintAmount, "Cannot mint more than maxMintAmount");
         require(msg.value >= cost * _mintAmount, "Not enough payment");
@@ -96,5 +98,9 @@ contract NFT is ERC721Enumerable, Ownable {
 
     function setPaused(bool _state) public onlyOwner {
         paused = _state;
+    }
+
+    function whitelistUser(address _address) public onlyOwner {
+        whitelisted[_address] = true;
     }
 }

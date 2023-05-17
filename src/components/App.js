@@ -30,6 +30,7 @@ function App() {
   const [cost, setCost] = useState(0)
   const [balance, setBalance] = useState(0)
   const [maxMintAmount, setMaxMintAmount] = useState(0)
+  const [whitelisted, setWhitelisted] = useState(false)
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -65,6 +66,9 @@ function App() {
 
     // Fetch balance
     setBalance(await nft.balanceOf(account))
+
+    // Fetch whitelist status
+    setWhitelisted(await nft.whitelisted(account))
 
     setIsLoading(false)
   }
@@ -116,7 +120,13 @@ function App() {
                   balance={balance}
                 />
 
-                <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
+                {whitelisted ? (
+                  <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
+                ) : (
+                  <div className='text-center'>
+                    <p>Not whitelisted</p>
+                  </div>
+                )}
               </Col>
             </Row>
           </>
