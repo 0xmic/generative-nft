@@ -90,55 +90,77 @@ function App() {
     <Container>
       <Navigation account={account} />
 
-      <h1 className='my-4 text-center'>Dapp Punks</h1>
+      <h1 className='my-4 text-center'>Open Punks</h1>
 
       {isLoading ? (
         <Loading />
       ) : (
         <>
-          <>
-            <Row>
-              <Col>
-                {balance > 0 ? (
-                  <div className='text-center'>
-                    <img
-                      // Update src to use walletOfOwner function to get the tokenURI of most recent mint
-                      src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${
-                        walletIds[walletIds.length - 1]
-                      }.png`}
-                      alt='Open Punk'
-                      width='400px'
-                      height='400px'
-                    />
-                  </div>
-                ) : (
-                  <img src={preview} alt='preview' />
-                )}
-              </Col>
-
-              <Col>
-                <div className='my-4 text-center'>
-                  <Countdown date={parseInt(revealTime)} className='h2' />
+          <Row>
+            <Col>
+              {balance > 0 ? (
+                <div className='text-center'>
+                  <img
+                    // Update src to use walletOfOwner function to get the tokenURI of most recent mint
+                    src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${
+                      walletIds[walletIds.length - 1]
+                    }.png`}
+                    alt='Open Punk'
+                    width='400px'
+                    height='400px'
+                  />
                 </div>
+              ) : (
+                <img src={preview} alt='preview' />
+              )}
+            </Col>
 
-                <Data
-                  maxSupply={maxSupply}
-                  totalSupply={totalSupply}
-                  maxMintAmount={maxMintAmount}
-                  cost={cost}
-                  balance={balance}
-                />
+            <Col>
+              <div className='my-4 text-center'>
+                <Countdown date={parseInt(revealTime)} className='h2' />
+              </div>
 
-                {whitelisted ? (
-                  <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
-                ) : (
-                  <div className='text-center'>
-                    <p>Not whitelisted</p>
-                  </div>
-                )}
+              <Data
+                maxSupply={maxSupply}
+                totalSupply={totalSupply}
+                maxMintAmount={maxMintAmount}
+                cost={cost}
+                balance={balance}
+              />
+
+              {whitelisted ? (
+                <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
+              ) : (
+                <div className='text-center'>
+                  <p>Not whitelisted</p>
+                </div>
+              )}
+            </Col>
+          </Row>
+
+          {balance > 0 ? (
+            <Container>
+              <hr />
+              <h2 className='my-4 text-center'>Wallet Gallery</h2>
+            </Container>
+          ) : (
+            <></>
+          )}
+
+          <Row>
+            {walletIds.map((id) => (
+              <Col key={id}>
+                <div className='my-4 text-center'>
+                  <img
+                    src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${id}.png`}
+                    alt={`Open Punk ${id}`}
+                    width='200px'
+                    height='200px'
+                  />
+                </div>
               </Col>
-            </Row>
-          </>
+            ))}
+          </Row>
         </>
       )}
     </Container>
