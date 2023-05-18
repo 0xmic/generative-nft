@@ -31,6 +31,7 @@ function App() {
   const [balance, setBalance] = useState(0)
   const [maxMintAmount, setMaxMintAmount] = useState(0)
   const [whitelisted, setWhitelisted] = useState(false)
+  const [walletIds, setWalletIds] = useState([])
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -70,6 +71,12 @@ function App() {
     // Fetch whitelist status
     setWhitelisted(await nft.whitelisted(account))
 
+    // Fetch wallet ids for minted tokens of user
+    const bigNumberWalletIds = await nft.walletOfOwner(account)
+    let walletIds = bigNumberWalletIds.map((bn) => bn.toNumber())
+    setWalletIds(walletIds)
+    console.log(walletIds)
+
     setIsLoading(false)
   }
 
@@ -96,7 +103,9 @@ function App() {
                   <div className='text-center'>
                     <img
                       // Update src to use walletOfOwner function to get the tokenURI of most recent mint
-                      src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${balance.toString()}.png`}
+                      src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${
+                        walletIds[walletIds.length - 1]
+                      }.png`}
                       alt='Open Punk'
                       width='400px'
                       height='400px'
