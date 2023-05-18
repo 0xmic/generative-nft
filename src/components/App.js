@@ -75,7 +75,6 @@ function App() {
     const bigNumberWalletIds = await nft.walletOfOwner(account)
     let walletIds = bigNumberWalletIds.map((bn) => bn.toNumber())
     setWalletIds(walletIds)
-    console.log(walletIds)
 
     setIsLoading(false)
   }
@@ -101,7 +100,6 @@ function App() {
               {balance > 0 ? (
                 <div className='text-center'>
                   <img
-                    // Update src to use walletOfOwner function to get the tokenURI of most recent mint
                     src={`https://gateway.pinata.cloud/ipfs/QmQPEMsfd1tJnqYPbnTQCjoa8vczfsV1FmqZWgRdNQ7z3g/${
                       walletIds[walletIds.length - 1]
                     }.png`}
@@ -129,7 +127,13 @@ function App() {
               />
 
               {whitelisted ? (
-                <Mint provider={provider} nft={nft} cost={cost} setIsLoading={setIsLoading} />
+                <Mint
+                  provider={provider}
+                  nft={nft}
+                  cost={cost}
+                  maxMintAmount={maxMintAmount}
+                  setIsLoading={setIsLoading}
+                />
               ) : (
                 <div className='text-center'>
                   <p>Not whitelisted</p>
